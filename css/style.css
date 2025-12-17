@@ -3,53 +3,130 @@
   margin: 0;
   padding: 0;
 }
-
 body {
-  font-family: Arial;
   margin: 0;
-  background: #f4f4f4;
+  font-family: 'Segoe UI', sans-serif;
+  background: #fafafa;
+  color: #222;
 }
 
-header {
-  background: black;
+.header {
+  background: #111;
   color: white;
-  padding: 15px;
+  padding: 15px 20px;
   display: flex;
   gap: 15px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
-header input, header select {
-  padding: 8px;
+.logo {
+  text-decoration: none;
+  color: white;
+  font-size: 22px;
+  font-weight: bold;
+  margin-right: auto;
 }
 
-.product-grid {
+.header input,
+.header select {
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: none;
+}
+
+.cart-btn,
+.back-btn {
+  margin-left: auto;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  background: #ff4500;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.products {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  padding: 22px;
 }
 
 .product {
   background: white;
-  padding: 15px;
+  padding: 18px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   text-align: center;
-  border-radius: 5px;
+  transition: 0.2s ease;
+}
+
+.product:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .product img {
   width: 100%;
-  height: 220px;
+  height: 260px;
   object-fit: cover;
+  border-radius: 6px;
 }
 
-button {
-  background: black;
+.product h3 {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.product button {
+  width: 100%;
+  padding: 10px;
+  background: #111;
   color: white;
   border: none;
-  padding: 10px;
-  margin-top: 10px;
+  border-radius: 4px;
   cursor: pointer;
+}
+
+.cart-container {
+  padding: 20px;
+  min-height: 60vh;
+}
+
+.cart-item {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  align-items: center;
+}
+
+.cart-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.cart-footer {
+  padding: 18px;
+  text-align: right;
+  font-size: 20px;
+  background: #fff;
+  border-top: 1px solid #ddd;
+}
+
+#clearCartBtn {
+  background: #ff0000;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 10px;
 }
 
 
