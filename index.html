@@ -2,23 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>College Website</title>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
-
-  <!-- JS -->
-  <script src="js/menu.js" defer></script>
+  <title>UrbanWear - Clothing Store</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <!-- Header Section -->
-  <div id="header">
-    <img src="images/Screenshot-2025-11-25-141311.png" alt="College Website Banner">
-  </div>
+<!-- ===== NAVBAR ===== -->
+<header>
+  <h1>UrbanWear</h1>
 
+  <input type="text" id="search" placeholder="Search products...">
+
+  <select id="categoryFilter">
+    <option value="All">All Categories</option>
+    <option value="T-Shirts">T-Shirts</option>
+    <option value="Jackets">Jackets</option>
+    <option value="Jeans">Jeans</option>
+    <option value="Hoodies">Hoodies</option>
+  </select>
+
+  <span>🛒 Cart: <span id="cartCount">0</span></span>
+</header>
+
+<!-- ===== PRODUCTS ===== -->
+<section id="products" class="product-grid">
+  <!-- Products will load from JS -->
+</section>
+
+<script src="script.js"></script>
 </body>
 </html>
