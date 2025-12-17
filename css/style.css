@@ -4,181 +4,53 @@
   padding: 0;
 }
 
-.header {
-  width: 100%;
-  height: 10%;
-  background-color: red;
-  display:flex;
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #f4f4f4;
 }
 
-.logo {
-  width: 25%;
-  height: 100%;
-  background-color: blue;
-}
-
-.logo a {
-  height: 100%;
-  width: 100%;
-  display:flex;
-  justify-content: center;
-}
-
-.logo a img {
-  width: auto;
-  height: auto;
-}
-
-.menu {
-  width: 75%;
-  height: 100%;
-  background-color: green;
-}
-
-.menu .menubar {
-  height: 100%;
-  width: 100%; 
-}
-
-.menu .menubar ul {
-  width: 90%;
-  height: 100%;
-  display:flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.menubar ul li {
-  position: relative;
-  list-style: none;
-  height: 100%;  
-  display: flex;
-  align-items: center;
-}
-
-.menubar ul li a {
-  text-decoration: none;
-  color: magenta;
-  font-size: 1.5vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  position: static !important;
-}
-
-.menu .mobilebar {
-  height: 100%;
-  width: 0%;
-}
-
-.menu .menubar ul li .submenu {
-  display: none;
-  position: absolute;
-  top:100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: magenta;
-  border: 1px solid black;
-  width: 200px;
-  height: auto;
-  flex-direction:column;
-  padding:5px 0;
-  z-index: 10;
-}
-
-.menu .menubar ul li .submenu li{
-  list-style: none;
-  padding: 8px 5%;
-  width: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center; 
-}
-
-.menu .menubar ul li .submenu li a{
-  font-size:1vw;
+header {
+  background: black;
   color: white;
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+header input, header select {
+  padding: 8px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.product {
+  background: white;
+  padding: 15px;
   text-align: center;
-  display: inline-block;
-  max-width: 100%;
-  /* position: absolute; */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  border-radius: 5px;
 }
 
-.menu .menubar ul li:hover .submenu {
-  display: block;
+.product img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
 }
 
-.menu .menubar ul .underline_current > a {
-    text-decoration: underline;
-    text-decoration-color: red;
+button {
+  background: black;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  cursor: pointer;
 }
-
-@media (max-width: 576px) {
-  .header {
-    height: 5%;
-    background: white;
-  }
-
-  .header .logo {
-    width: 80%;
-    background-color: white;
-  }
-
-  .header .logo a {
-    width: 50%;
-    background-color: white;
-    justify-content: none;
-    padding-left: 20%;
-  }
-
-  .header .menu {
-    width: 20%;
-    background-color: white;
-  }
-
-  .header .menu .menubar{
-    width: 0%;
-    height: 0%;
-  }
-
-  .header .menu .mobilebar {
-    width: 100%;
-    height: 100%;
-  }
-
-  .header .menu .mobilebar .hamburger {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    background:green;
-  }
-
-  .header .menu .mobilebar .hamburger span {
-    display: block;
-    width: 20px;
-    height: 2px;
-    background: white;
-    border-radius: 2px;
-    box-shadow: 0 7px 0 white, 0 -7px 0 white;
-  }
-
-  .header .menu.mobile-open .menubar ul {
-    display: flex;
-    background: grey;
-    position: absolute;
-    top:5%;
-    left: 0;
-    right: 0;
-    z-index: 9;
-    flex-direction: column;
-  }
 
 
 
