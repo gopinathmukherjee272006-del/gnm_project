@@ -3,142 +3,180 @@
   margin: 0;
   padding: 0;
 }
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #fafafa;
-  color: #222;
-}
 
 .header {
-  background: #111;
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  flex-wrap: wrap;
+  width: 100%;
+  height: 10%;
+  background-color: black;
+  display:flex;
 }
 
 .logo {
-  text-decoration: none;
-  color: white;
-  font-size: 22px;
-  font-weight: bold;
-  margin-right: auto;
+  width: 25%;
+  height: 100%;
+  background-color: brown;
 }
 
-.header input,
-.header select {
-  padding: 8px 10px;
-  border-radius: 4px;
-  border: none;
-}
-
-.cart-btn,
-.back-btn {
-  margin-left: auto;
-  text-decoration: none;
-  color: white;
-  font-weight: bold;
-  background: #ff4500;
-  padding: 8px 12px;
-  border-radius: 4px;
-}
-
-.products {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 18px;
-  padding: 22px;
-}
-
-.product {
-  background: white;
-  padding: 18px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  text-align: center;
-  transition: 0.2s ease;
-}
-
-.product:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.product img {
+.logo a {
+  height: 100%;
   width: 100%;
-  height: 260px;
-  object-fit: cover;
-  border-radius: 6px;
+  display:flex;
+  justify-content: center;
 }
 
-.product h3 {
-  margin: 10px 0;
-  font-size: 18px;
+.logo a img {
+  width: auto;
+  height: auto;
 }
 
-.product button {
-  width: 100%;
-  padding: 10px;
-  background: #111;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.menu {
+  width: 75%;
+  height: 100%;
+  background-color: gray;
 }
 
-.cart-container {
-  padding: 20px;
-  min-height: 60vh;
+.menu .menubar {
+  height: 100%;
+  width: 100%; 
 }
 
-.cart-item {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 14px;
-  background: white;
-  padding: 10px;
-  border-radius: 6px;
+.menu .menubar ul {
+  width: 90%;
+  height: 100%;
+  display:flex;
+  justify-content: space-around;
   align-items: center;
 }
 
-.cart-item img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 5px;
+.menubar ul li {
+  position: relative;
+  list-style: none;
+  height: 100%;  
+  display: flex;
+  align-items: center;
 }
 
-.cart-footer {
-  padding: 18px;
-  text-align: right;
-  font-size: 20px;
-  background: #fff;
-  border-top: 1px solid #ddd;
+.menubar ul li a {
+  text-decoration: none;
+  color: magenta;
+  font-size: 1.5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: static !important;
 }
 
-#clearCartBtn {
-  background: #ff0000;
+.menu .mobilebar {
+  height: 100%;
+  width: 0%;
+}
+
+.menu .menubar ul li .submenu {
+  display: none;
+  position: absolute;
+  top:100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: magenta;
+  border: 1px solid black;
+  width: 200px;
+  height: auto;
+  flex-direction:column;
+  padding:5px 0;
+  z-index: 10;
+}
+
+.menu .menubar ul li .submenu li{
+  list-style: none;
+  padding: 8px 5%;
+  width: 90%;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+
+.menu .menubar ul li .submenu li a{
+  font-size:1vw;
   color: white;
-  border: none;
-  padding: 10px 14px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-top: 10px;
+  text-align: center;
+  display: inline-block;
+  max-width: 100%;
+  /* position: absolute; */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+.menu .menubar ul li:hover .submenu {
+  display: block;
+}
 
+.menu .menubar ul .underline_current > a {
+    text-decoration: underline;
+    text-decoration-color: black;
+}
 
+@media (max-width: 576px) {
+  .header {
+    height: 5%;
+    background: white;
+  }
 
+  .header .logo {
+    width: 80%;
+    background-color: white;
+  }
 
+  .header .logo a {
+    width: 50%;
+    background-color: white;
+    justify-content: none;
+    padding-left: 20%;
+  }
 
+  .header .menu {
+    width: 20%;
+    background-color: white;
+  }
 
+  .header .menu .menubar{
+    width: 0%;
+    height: 0%;
+  }
 
+  .header .menu .mobilebar {
+    width: 100%;
+    height: 100%;
+  }
 
+  .header .menu .mobilebar .hamburger {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background:green;
+  }
 
+  .header .menu .mobilebar .hamburger span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: white;
+    border-radius: 2px;
+    box-shadow: 0 7px 0 white, 0 -7px 0 white;
+  }
 
-
-
-        
+  .header .menu.mobile-open .menubar ul {
+    display: flex;
+    background: grey;
+    position: absolute;
+    top:5%;
+    left: 0;
+    right: 0;
+    z-index: 9;
+    flex-direction: column;
+  }
+}      
