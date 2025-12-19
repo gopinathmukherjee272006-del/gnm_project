@@ -1,4 +1,5 @@
 
+
 fetch("header.html")
 .then(res => res.text())
 .then(data => {
@@ -19,5 +20,30 @@ fetch("header.html")
   
         if (linkPage == currentPage) {
       		link.closest("li").classList.add("underline_current");
-        }
-	
+    	}
+
+		if (window.innerWidth <= 576) {
+			const menu = document.querySelector(".menu");
+			const menuBar = document.querySelector(".menu .menubar ul");
+			const mobileBar = document.querySelector(".menu .mobilebar");
+
+			if(mobileBar && !mobileBar.querySelector(".hamburger")) {
+				const dv = document.createElement("div");
+				dv.className = "hamburger";
+				dv.setAttribute("aria-label", "Toggle menu");
+				dv.setAttribute("tabindex","0");
+				dv.innerHTML= '<span></span>';
+				mobileBar.appendChild(dv);
+
+				dv.addEventListener("click", function(e) {
+					e.stopPropagation();
+					menu.classList.toggle("mobile-open");
+				});
+			}
+		}
+	});
+
+}) // end then
+.catch(err => {
+    console.error("Header load failed:", err);
+});
