@@ -3,20 +3,50 @@
 <head>
   <title>Offline Voice Translator</title>
   <style>
-    body{font-family:Arial;background:linear-gradient(135deg,#1f4037,#99f2c8);display:flex;justify-content:center;align-items:center;height:100vh;color:white;}
-    .box{background:#2c5364;padding:20px;border-radius:12px;width:500px;text-align:center;}
-    textarea,select,button{width:100%;margin:6px 0;padding:10px;font-size:16px;border-radius:6px;}
-    button{background:#141e30;color:white;border:none;cursor:pointer;margin:4px;}
-    h3{min-height:30px;margin-top:10px;}
+    body{
+      font-family: Arial;
+      background: linear-gradient(135deg,#1f4037,#99f2c8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+    .box{
+      background: #2c5364;
+      padding: 20px;
+      width: 500px;
+      border-radius: 12px;
+      text-align: center;
+    }
+    textarea, select, button{
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      font-size: 16px;
+      border-radius: 6px;
+    }
+    button{
+      background: #141e30;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin: 4px 0;
+    }
+    h3{
+      min-height: 30px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
+
 <div class="box">
-  <h2>🌍 Fully Working Offline Translator</h2>
-
-  <textarea id="input" placeholder="Type or speak a word..."></textarea>
+  <h2>🌍 Offline Voice Translator</h2>
+  
+  <textarea id="input" placeholder="Type or speak a word"></textarea>
   <button onclick="startVoice()">🎤 Voice Input</button>
-
+  
   <select id="fromLang">
     <option value="en">English</option>
     <option value="hi">Hindi</option>
@@ -24,7 +54,7 @@
     <option value="de">German</option>
     <option value="sa">Sanskrit</option>
   </select>
-
+  
   <select id="toLang">
     <option value="en">English</option>
     <option value="hi">Hindi</option>
@@ -32,10 +62,10 @@
     <option value="de">German</option>
     <option value="sa">Sanskrit</option>
   </select>
-
+  
   <button onclick="translate()">Translate ✅</button>
   <button onclick="speak()">🔊 Voice Output</button>
-
+  
   <h3 id="output"></h3>
 </div>
 
@@ -51,12 +81,13 @@ const dict = {
   "sun":{"hi":"सूरज","fr":"soleil","de":"sonne","sa":"सूर्यः"},
   "moon":{"hi":"चाँद","fr":"lune","de":"mond","sa":"चन्द्रः"},
   "fire":{"hi":"आग","fr":"feu","de":"feuer","sa":"अग्निः"},
-  "earth":{"hi":"धरती","fr":"terre","de":"erde","sa":"पृथिवी"}
+  "earth":{"hi":"धरती","fr":"terre","de":"erde","sa":"पृथिवी"},
+  "friend":{"hi":"मित्र","fr":"ami","de":"freund","sa":"मित्रः"},
+  "love":{"hi":"प्यार","fr":"amour","de":"liebe","sa":"प्रेमः"}
 };
 
 // Voice input
 function startVoice(){
-  const inputField = document.getElementById("input");
   if(!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)){
     alert("Browser does not support voice input");
     return;
@@ -64,7 +95,7 @@ function startVoice(){
   const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
   rec.lang = "en-US";
   rec.start();
-  rec.onresult = e => inputField.value = e.results[0][0].transcript;
+  rec.onresult = e => document.getElementById("input").value = e.results[0][0].transcript;
 }
 
 // Translate function
@@ -74,14 +105,13 @@ function translate(){
   const to = document.getElementById("toLang").value;
   const output = document.getElementById("output");
 
-  if(word===""){ output.innerText="❌ Please enter a word"; return; }
+  if(!word){ output.innerText="❌ Please enter a word"; return; }
 
-  // Direct English lookup
   let translation = "";
+
   if(from==="en"){
     translation = dict[word] ? dict[word][to] : null;
   } else {
-    // Reverse lookup for non-English source
     for(let key in dict){
       if(dict[key][from] && dict[key][from].toLowerCase() === word){
         translation = dict[key][to];
@@ -100,14 +130,12 @@ function speak(){
 
   const msg = new SpeechSynthesisUtterance(text);
 
-  // Map language codes to speechSynthesis
-  const langCode = document.getElementById("toLang").value;
-  switch(langCode){
+  switch(document.getElementById("toLang").value){
     case "en": msg.lang="en-US"; break;
     case "hi": msg.lang="hi-IN"; break;
     case "fr": msg.lang="fr-FR"; break;
     case "de": msg.lang="de-DE"; break;
-    case "sa": msg.lang="sa"; break; // Sanskrit
+    case "sa": msg.lang="sa"; break;
     default: msg.lang="en-US";
   }
 
