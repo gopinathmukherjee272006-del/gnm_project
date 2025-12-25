@@ -1,84 +1,121 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Math Playground</title>
-    <style>
-      body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        text-align: center;
-      }
+<head>
+  <title>Advanced Maths Solver</title>
+  <style>
+    body{
+      font-family: Arial;
+      background: linear-gradient(135deg,#141e30,#243b55);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+      color:white;
+    }
+    .solver{
+      background:#1f4068;
+      padding:20px;
+      width:550px;
+      border-radius:12px;
+      text-align:center;
+    }
+    input{
+      width:95%;
+      padding:10px;
+      margin-bottom:10px;
+      font-size:16px;
+      border-radius:6px;
+      border:none;
+    }
+    button{
+      padding:10px 20px;
+      font-size:16px;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+      background:#243b55;
+      color:white;
+      margin:5px;
+    }
+    h3{
+      min-height:30px;
+      margin-top:10px;
+    }
+    p{
+      font-size:14px;
+      color:#dcdcdc;
+    }
+  </style>
+</head>
+<body>
 
-      h1 {
-        font-size: 3em;
-        margin-top: 40px;
-        animation: float 2s ease-in-out infinite;
-      }
+<div class="solver">
+  <h2>🧮 Advanced Maths Solver</h2>
+  <input type="text" id="question" placeholder="Type any maths question e.g. 2+3*5 or √16 + 7^2">
+  <div>
+    <button onclick="solve()">Solve ✅</button>
+    <button onclick="clearField()">Clear ❌</button>
+  </div>
+  <h3 id="answer"></h3>
+  <p>Supports: + - * / ^ √ sin cos tan log ln ! (factorial) and brackets</p>
+</div>
 
-      .card {
-        background: rgba(255, 255, 255, 0.15);
-        padding: 30px;
-        margin: 40px auto;
-        width: 80%;
-        max-width: 400px;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-      }
+<script>
+// Factorial function
+function factorial(n){
+  if(n<0) return NaN;
+  if(n===0 || n===1) return 1;
+  let f=1;
+  for(let i=2;i<=n;i++) f*=i;
+  return f;
+}
 
-      button {
-        padding: 12px 20px;
-        font-size: 16px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        background: #ffdd57;
-        color: #333;
-        transition: transform 0.2s, background 0.2s;
-      }
+// Main solver
+function solve(){
+  let q = document.getElementById("question").value.trim();
+  let answerBox = document.getElementById("answer");
 
-      button:hover {
-        transform: scale(1.1);
-        background: #ffe97f;
-      }
+  if(!q){
+    answerBox.innerText="❌ Please enter a question";
+    return;
+  }
 
-      #fact {
-        margin-top: 20px;
-        font-size: 1.2em;
-      }
+  try{
+    // Replace √ with Math.sqrt
+    let expression = q.replace(/√/g,'Math.sqrt');
 
-      @keyframes float {
-        0% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0); }
-      }
-    </style>
-  </head>
+    // Replace ^ with **
+    expression = expression.replace(/\^/g,'**');
 
-  <body>
-    <h1>🧮 Math Playground</h1>
+    // Replace sin, cos, tan, log, ln
+    expression = expression.replace(/sin/g,'Math.sin')
+                           .replace(/cos/g,'Math.cos')
+                           .replace(/tan/g,'Math.tan')
+                           .replace(/log/g,'Math.log10')
+                           .replace(/ln/g,'Math.log');
 
-    <div class="card">
-      <p>Click the button to learn a cool math fact!</p>
-      <button onclick="newFact()">New Math Fact</button>
-      <div id="fact"></div>
-    </div>
+    // Replace factorial n! with factorial(n)
+    expression = expression.replace(/(\d+)!/g,'factorial($1)');
 
-    <script>
-      const facts = [
-        "Zero is the only number that cannot be represented in Roman numerals.",
-        "A circle has the largest area of any shape with the same perimeter.",
-        "The symbol ∞ is called infinity.",
-        "Prime numbers have exactly two factors.",
-        "The Fibonacci sequence appears in nature."
-      ];
+    // Evaluate expression
+    let result = eval(expression);
 
-      function newFact() {
-        const randomIndex = Math.floor(Math.random() * facts.length);
-        document.getElementById("fact").textContent = facts[randomIndex];
-      }
-    </script>
-  </body>
+    // Round to 10 decimal places if needed
+    if(Number(result) && !Number.isInteger(result)){
+      result = result.toFixed(10).replace(/\.?0+$/,"");
+    }
+
+    answerBox.innerText = `Answer: ${result}`;
+  }catch(e){
+    answerBox.innerText = "❌ Invalid question";
+  }
+}
+
+// Clear input and output
+function clearField(){
+  document.getElementById("question").value="";
+  document.getElementById("answer").innerText="";
+}
+</script>
+</body>
 </html>
-
