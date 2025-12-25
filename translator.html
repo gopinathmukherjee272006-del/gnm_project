@@ -1,96 +1,143 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Language Translator</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #00c6ff, #0072ff);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        color: white;
-      }
+<head>
+  <title>Smart AI Translator</title>
+  <style>
+    body{
+      font-family:Arial;
+      background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+      display:flex;justify-content:center;align-items:center;height:100vh;
+    }
+    .box{
+      background:#fff;padding:20px;width:440px;border-radius:12px;text-align:center;
+    }
+    textarea,select,button{
+      width:100%;margin:6px 0;padding:8px;font-size:15px;
+    }
+    button{
+      background:#2c5364;color:#fff;border:none;border-radius:6px;cursor:pointer;
+    }
+  </style>
+</head>
 
-      .translator {
-        background: rgba(0, 0, 0, 0.3);
-        padding: 25px;
-        border-radius: 15px;
-        width: 320px;
-        text-align: center;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-      }
+<body>
+<div class="box">
+  <h2>🌍 Smart AI Translator (30+)</h2>
 
-      h1 {
-        margin-bottom: 15px;
-      }
+  <textarea id="input" placeholder="Type or speak..."></textarea>
+  <button onclick="startVoice()">🎤 Voice Input</button>
 
-      textarea {
-        width: 100%;
-        height: 60px;
-        border-radius: 8px;
-        border: none;
-        padding: 10px;
-        font-size: 16px;
-        margin-bottom: 10px;
-      }
+  <select id="fromLang">
+    <option value="auto">Auto Detect</option>
+    <option value="en">English</option>
+    <option value="hi">Hindi</option>
+    <option value="fr">French</option>
+    <option value="de">German</option>
+    <option value="es">Spanish</option>
+    <option value="it">Italian</option>
+    <option value="pt">Portuguese</option>
+    <option value="ru">Russian</option>
+    <option value="zh">Chinese</option>
+    <option value="ja">Japanese</option>
+    <option value="ko">Korean</option>
+    <option value="ar">Arabic</option>
+    <option value="ur">Urdu</option>
+    <option value="bn">Bengali</option>
+    <option value="ta">Tamil</option>
+    <option value="te">Telugu</option>
+    <option value="mr">Marathi</option>
+    <option value="gu">Gujarati</option>
+    <option value="pa">Punjabi</option>
+    <option value="ne">Nepali</option>
+    <option value="th">Thai</option>
+    <option value="vi">Vietnamese</option>
+    <option value="id">Indonesian</option>
+    <option value="tr">Turkish</option>
+    <option value="nl">Dutch</option>
+    <option value="pl">Polish</option>
+    <option value="sv">Swedish</option>
+    <option value="no">Norwegian</option>
+    <option value="da">Danish</option>
+    <option value="fi">Finnish</option>
+    <option value="el">Greek</option>
+  </select>
 
-      button {
-        padding: 10px 20px;
-        font-size: 16px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        background: #ffdd57;
-        color: #333;
-        margin-top: 10px;
-      }
+  <select id="toLang">
+    <option value="en">English</option>
+    <option value="hi">Hindi</option>
+    <option value="fr">French</option>
+    <option value="de">German</option>
+    <option value="es">Spanish</option>
+    <option value="it">Italian</option>
+    <option value="pt">Portuguese</option>
+    <option value="ru">Russian</option>
+    <option value="zh">Chinese</option>
+    <option value="ja">Japanese</option>
+    <option value="ko">Korean</option>
+    <option value="ar">Arabic</option>
+    <option value="ur">Urdu</option>
+    <option value="bn">Bengali</option>
+    <option value="ta">Tamil</option>
+    <option value="te">Telugu</option>
+    <option value="mr">Marathi</option>
+    <option value="gu">Gujarati</option>
+    <option value="pa">Punjabi</option>
+    <option value="ne">Nepali</option>
+    <option value="th">Thai</option>
+    <option value="vi">Vietnamese</option>
+    <option value="id">Indonesian</option>
+    <option value="tr">Turkish</option>
+    <option value="nl">Dutch</option>
+    <option value="pl">Polish</option>
+    <option value="sv">Swedish</option>
+    <option value="no">Norwegian</option>
+    <option value="da">Danish</option>
+    <option value="fi">Finnish</option>
+    <option value="el">Greek</option>
+  </select>
 
-      #output {
-        margin-top: 15px;
-        font-size: 18px;
-        font-weight: bold;
-      }
-    </style>
-  </head>
+  <button onclick="translate()">Translate</button>
+  <button onclick="speak()">🔊 Voice Output</button>
 
-  <body>
-    <div class="translator">
-      <h1>🌍 Translator</h1>
+  <h3 id="output"></h3>
+</div>
 
-      <textarea id="inputText" placeholder="Type in English..."></textarea>
-      <button onclick="translateText()">Translate</button>
+<script>
+// VOICE INPUT
+function startVoice(){
+  const rec=new(window.SpeechRecognition||window.webkitSpeechRecognition)();
+  rec.start();
+  rec.onresult=e=>input.value=e.results[0][0].transcript;
+}
 
-      <div id="output"></div>
-    </div>
+// TRANSLATE (AI)
+async function translate(){
+  output.innerText="Translating...";
+  try{
+    const res=await fetch("https://libretranslate.de/translate",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        q:input.value,
+        source:fromLang.value,
+        target:toLang.value,
+        format:"text"
+      })
+    });
+    const data=await res.json();
+    output.innerText=data.translatedText;
+  }catch{
+    output.innerText="❌ Internet problem";
+  }
+}
 
-    <script>
-      const dictionary = {
-        hello: "hola",
-        goodbye: "adiós",
-        please: "por favor",
-        thank: "gracias",
-        yes: "sí",
-        no: "no",
-        water: "agua",
-        food: "comida",
-        friend: "amigo",
-        school: "escuela"
-      };
-
-      function translateText() {
-        const input = document.getElementById("inputText").value.toLowerCase();
-        const words = input.split(" ");
-        let translated = [];
-
-        for (let word of words) {
-          translated.push(dictionary[word] || `[${word}]`);
-        }
-
-        document.getElementById("output").textContent =
-          translated.join(" ");
-      }
-    </script>
-  </body>
+// VOICE OUTPUT
+function speak(){
+  if(!output.innerText) return;
+  const msg=new SpeechSynthesisUtterance(output.innerText);
+  msg.lang=toLang.value;
+  speechSynthesis.speak(msg);
+}
+</script>
+</body>
 </html>
