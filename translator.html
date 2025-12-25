@@ -4,25 +4,43 @@
   <title>Smart AI Translator</title>
   <style>
     body{
-      font-family:Arial;
-      background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-      display:flex;justify-content:center;align-items:center;height:100vh;
+      font-family: Arial;
+      background: linear-gradient(135deg,#1f4037,#99f2c8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
     .box{
-      background:#fff;padding:20px;width:440px;border-radius:12px;text-align:center;
+      background: white;
+      padding: 20px;
+      width: 500px;
+      border-radius: 12px;
+      text-align: center;
     }
-    textarea,select,button{
-      width:100%;margin:6px 0;padding:8px;font-size:15px;
+    textarea, select, button{
+      width: 100%;
+      margin: 6px 0;
+      padding: 8px;
+      font-size: 15px;
     }
     button{
-      background:#2c5364;color:#fff;border:none;border-radius:6px;cursor:pointer;
+      background: #1f4037;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    h3{
+      min-height: 30px;
+      color: #1f4037;
     }
   </style>
 </head>
 
 <body>
 <div class="box">
-  <h2>🌍 Smart AI Translator (30+)</h2>
+  <h2>🌍 Smart AI Translator (30+ Languages)</h2>
 
   <textarea id="input" placeholder="Type or speak..."></textarea>
   <button onclick="startVoice()">🎤 Voice Input</button>
@@ -105,37 +123,44 @@
 <script>
 // VOICE INPUT
 function startVoice(){
-  const rec=new(window.SpeechRecognition||window.webkitSpeechRecognition)();
+  const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  rec.lang = "en-IN";
   rec.start();
-  rec.onresult=e=>input.value=e.results[0][0].transcript;
+  rec.onresult = e => input.value = e.results[0][0].transcript;
 }
 
-// TRANSLATE (AI)
+// TRANSLATE USING FREE API
 async function translate(){
-  output.innerText="Translating...";
+  const text = document.getElementById("input").value;
+  const from = document.getElementById("fromLang").value;
+  const to = document.getElementById("toLang").value;
+  const output = document.getElementById("output");
+
+  if(!text){
+    output.innerText = "❌ Please enter text";
+    return;
+  }
+
+  output.innerText = "⏳ Translating...";
+
   try{
-    const res=await fetch("https://libretranslate.de/translate",{
+    const res = await fetch("https://translate.argosopentech.com/translate",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        q:input.value,
-        source:fromLang.value,
-        target:toLang.value,
-        format:"text"
-      })
+      body:JSON.stringify({q:text,source:from,target:to,format:"text"})
     });
-    const data=await res.json();
-    output.innerText=data.translatedText;
+    const data = await res.json();
+    output.innerText = data.translatedText;
   }catch{
-    output.innerText="❌ Internet problem";
+    output.innerText = "❌ Internet problem";
   }
 }
 
 // VOICE OUTPUT
 function speak(){
-  if(!output.innerText) return;
-  const msg=new SpeechSynthesisUtterance(output.innerText);
-  msg.lang=toLang.value;
+  const text = document.getElementById("output").innerText;
+  if(!text) return;
+  const msg = new SpeechSynthesisUtterance(text);
   speechSynthesis.speak(msg);
 }
 </script>
