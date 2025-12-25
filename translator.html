@@ -2,56 +2,104 @@
 <html>
 <head>
   <title>Simple Translator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+    .translator-box {
+      background: rgba(0,0,0,0.5);
+      padding: 30px;
+      border-radius: 15px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    input, select, button {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      background: #ff7e5f;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #feb47b;
+    }
+    h2 { margin-bottom: 20px; }
+    #output {
+      margin-top: 15px;
+      min-height: 25px;
+      font-weight: bold;
+      color: #ffd700;
+    }
+  </style>
 </head>
 <body>
-  <h2>Simple Translator</h2>
+
+<div class="translator-box">
+  <h2>🌐 Simple Translator</h2>
   <input type="text" id="text" placeholder="Type text here">
   <select id="lang">
     <option value="hi-en">Hindi → English</option>
-    <option value="hi-sa">Hindi → Sanskrit</option>
     <option value="en-hi">English → Hindi</option>
+    <option value="hi-sa">Hindi → Sanskrit</option>
   </select>
   <button onclick="translate()">Translate</button>
   <p id="output"></p>
+</div>
 
-  <script>
-    async function translate(){
-      const text = document.getElementById("text").value.trim();
-      const lang = document.getElementById("lang").value;
-      const output = document.getElementById("output");
+<script>
+async function translate(){
+  const text = document.getElementById("text").value.trim();
+  const lang = document.getElementById("lang").value;
+  const output = document.getElementById("output");
 
-      if(!text){ output.innerText="❌ Enter some text"; return; }
+  if(!text){ output.innerText="❌ Enter some text"; return; }
 
-      if(lang==="hi-sa"){
-        // Simple offline dictionary for Hindi → Sanskrit
-        const dict = {
-          "नमस्ते":"नमः",
-          "पानी":"आपः",
-          "धरती":"पृथिवी",
-          "सूरज":"सूर्यः",
-          "चाँद":"चन्द्रः",
-          "मित्र":"मित्रः",
-          "किताब":"पुस्तकम्",
-          "विद्यालय":"विद्यालयः",
-          "प्यार":"प्रेमः"
-        };
-        output.innerText = dict[text] || "❌ Translation not found";
-        return;
-      }
+  // Offline Hindi → Sanskrit dictionary
+  const dictSA = {
+    "नमस्ते":"नमः",
+    "पानी":"आपः",
+    "धरती":"पृथिवी",
+    "सूरज":"सूर्यः",
+    "चाँद":"चन्द्रः",
+    "मित्र":"मित्रः",
+    "किताब":"पुस्तकम्",
+    "विद्यालय":"विद्यालयः",
+    "प्यार":"प्रेमः"
+  };
 
-      // For other translations, use MyMemory API
-      let source,target;
-      if(lang==="hi-en"){ source="hi"; target="en"; }
-      else if(lang==="en-hi"){ source="en"; target="hi"; }
+  if(lang==="hi-sa"){
+    output.innerText = dictSA[text] || "❌ Translation not found";
+    return;
+  }
 
-      try{
-        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`);
-        const data = await res.json();
-        output.innerText = data.responseData.translatedText;
-      }catch(e){
-        output.innerText = "❌ Error! Check internet connection.";
-      }
-    }
-  </script>
+  // For other translations, use online API
+  let source,target;
+  if(lang==="hi-en"){ source="hi"; target="en"; }
+  else if(lang==="en-hi"){ source="en"; target="hi"; }
+
+  try{
+    const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`);
+    const data = await res.json();
+    output.innerText = data.responseData.translatedText;
+  }catch(e){
+    output.innerText = "❌ Error! Check internet connection.";
+  }
+}
+</script>
+
 </body>
 </html>
