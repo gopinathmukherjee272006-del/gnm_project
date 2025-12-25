@@ -1,146 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Offline Voice Translator</title>
-  <style>
-    body{
-      font-family: Arial;
-      background: linear-gradient(135deg,#1f4037,#99f2c8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      color: white;
-    }
-    .box{
-      background: #2c5364;
-      padding: 20px;
-      width: 500px;
-      border-radius: 12px;
-      text-align: center;
-    }
-    textarea, select, button{
-      width: 100%;
-      padding: 10px;
-      margin: 6px 0;
-      font-size: 16px;
-      border-radius: 6px;
-    }
-    button{
-      background: #141e30;
-      color: white;
-      border: none;
-      cursor: pointer;
-      margin: 4px 0;
-    }
-    h3{
-      min-height: 30px;
-      margin-top: 10px;
-    }
-  </style>
+  <title>Simple Translator</title>
 </head>
 <body>
-
-<div class="box">
-  <h2>🌍 Offline Voice Translator</h2>
-  
-  <textarea id="input" placeholder="Type or speak a word"></textarea>
-  <button onclick="startVoice()">🎤 Voice Input</button>
-  
-  <select id="fromLang">
-    <option value="en">English</option>
-    <option value="hi">Hindi</option>
-    <option value="fr">French</option>
-    <option value="de">German</option>
-    <option value="sa">Sanskrit</option>
+  <h2>Simple Translator</h2>
+  <input type="text" id="text" placeholder="Type text here">
+  <select id="lang">
+    <option value="hi-en">Hindi → English</option>
+    <option value="hi-sa">Hindi → Sanskrit</option>
+    <option value="en-hi">English → Hindi</option>
   </select>
-  
-  <select id="toLang">
-    <option value="en">English</option>
-    <option value="hi">Hindi</option>
-    <option value="fr">French</option>
-    <option value="de">German</option>
-    <option value="sa">Sanskrit</option>
-  </select>
-  
-  <button onclick="translate()">Translate ✅</button>
-  <button onclick="speak()">🔊 Voice Output</button>
-  
-  <h3 id="output"></h3>
-</div>
+  <button onclick="translate()">Translate</button>
+  <p id="output"></p>
 
-<script>
-// Offline dictionary (expandable)
-const dict = {
-  "hello":{"hi":"नमस्ते","fr":"bonjour","de":"hallo","sa":"नमः"},
-  "world":{"hi":"दुनिया","fr":"monde","de":"welt","sa":"जगत्"},
-  "apple":{"hi":"सेब","fr":"pomme","de":"apfel","sa":"सेबम्"},
-  "water":{"hi":"पानी","fr":"eau","de":"wasser","sa":"आपः"},
-  "book":{"hi":"किताब","fr":"livre","de":"buch","sa":"पुस्तकम्"},
-  "school":{"hi":"विद्यालय","fr":"école","de":"schule","sa":"विद्यालयः"},
-  "sun":{"hi":"सूरज","fr":"soleil","de":"sonne","sa":"सूर्यः"},
-  "moon":{"hi":"चाँद","fr":"lune","de":"mond","sa":"चन्द्रः"},
-  "fire":{"hi":"आग","fr":"feu","de":"feuer","sa":"अग्निः"},
-  "earth":{"hi":"धरती","fr":"terre","de":"erde","sa":"पृथिवी"},
-  "friend":{"hi":"मित्र","fr":"ami","de":"freund","sa":"मित्रः"},
-  "love":{"hi":"प्यार","fr":"amour","de":"liebe","sa":"प्रेमः"}
-};
+  <script>
+    async function translate(){
+      const text = document.getElementById("text").value.trim();
+      const lang = document.getElementById("lang").value;
+      const output = document.getElementById("output");
 
-// Voice input
-function startVoice(){
-  if(!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)){
-    alert("Browser does not support voice input");
-    return;
-  }
-  const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  rec.lang = "en-US";
-  rec.start();
-  rec.onresult = e => document.getElementById("input").value = e.results[0][0].transcript;
-}
+      if(!text){ output.innerText="❌ Enter some text"; return; }
 
-// Translate function
-function translate(){
-  const word = document.getElementById("input").value.trim().toLowerCase();
-  const from = document.getElementById("fromLang").value;
-  const to = document.getElementById("toLang").value;
-  const output = document.getElementById("output");
+      if(lang==="hi-sa"){
+        // Simple offline dictionary for Hindi → Sanskrit
+        const dict = {
+          "नमस्ते":"नमः",
+          "पानी":"आपः",
+          "धरती":"पृथिवी",
+          "सूरज":"सूर्यः",
+          "चाँद":"चन्द्रः",
+          "मित्र":"मित्रः",
+          "किताब":"पुस्तकम्",
+          "विद्यालय":"विद्यालयः",
+          "प्यार":"प्रेमः"
+        };
+        output.innerText = dict[text] || "❌ Translation not found";
+        return;
+      }
 
-  if(!word){ output.innerText="❌ Please enter a word"; return; }
+      // For other translations, use MyMemory API
+      let source,target;
+      if(lang==="hi-en"){ source="hi"; target="en"; }
+      else if(lang==="en-hi"){ source="en"; target="hi"; }
 
-  let translation = "";
-
-  if(from==="en"){
-    translation = dict[word] ? dict[word][to] : null;
-  } else {
-    for(let key in dict){
-      if(dict[key][from] && dict[key][from].toLowerCase() === word){
-        translation = dict[key][to];
-        break;
+      try{
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${source}|${target}`);
+        const data = await res.json();
+        output.innerText = data.responseData.translatedText;
+      }catch(e){
+        output.innerText = "❌ Error! Check internet connection.";
       }
     }
-  }
-
-  output.innerText = translation ? translation : "❌ Translation not found";
-}
-
-// Voice output
-function speak(){
-  const text = document.getElementById("output").innerText;
-  if(!text || text.startsWith("❌")) return;
-
-  const msg = new SpeechSynthesisUtterance(text);
-
-  switch(document.getElementById("toLang").value){
-    case "en": msg.lang="en-US"; break;
-    case "hi": msg.lang="hi-IN"; break;
-    case "fr": msg.lang="fr-FR"; break;
-    case "de": msg.lang="de-DE"; break;
-    case "sa": msg.lang="sa"; break;
-    default: msg.lang="en-US";
-  }
-
-  speechSynthesis.speak(msg);
-}
-</script>
+  </script>
 </body>
 </html>
