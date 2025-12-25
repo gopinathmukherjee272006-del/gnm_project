@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Language Translator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: white;
+      }
+
+      .translator {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 25px;
+        border-radius: 15px;
+        width: 320px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      }
+
+      h1 {
+        margin-bottom: 15px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 60px;
+        border-radius: 8px;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #ffdd57;
+        color: #333;
+        margin-top: 10px;
+      }
+
+      #output {
+        margin-top: 15px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="translator">
+      <h1>🌍 Translator</h1>
+
+      <textarea id="inputText" placeholder="Type in English..."></textarea>
+      <button onclick="translateText()">Translate</button>
+
+      <div id="output"></div>
+    </div>
+
+    <script>
+      const dictionary = {
+        hello: "hola",
+        goodbye: "adiós",
+        please: "por favor",
+        thank: "gracias",
+        yes: "sí",
+        no: "no",
+        water: "agua",
+        food: "comida",
+        friend: "amigo",
+        school: "escuela"
+      };
+
+      function translateText() {
+        const input = document.getElementById("inputText").value.toLowerCase();
+        const words = input.split(" ");
+        let translated = [];
+
+        for (let word of words) {
+          translated.push(dictionary[word] || `[${word}]`);
+        }
+
+        document.getElementById("output").textContent =
+          translated.join(" ");
+      }
+    </script>
+  </body>
+</html>
