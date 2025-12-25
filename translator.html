@@ -1,83 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Smart AI Translator</title>
+  <title>Offline Voice Translator</title>
   <style>
-    body{
-      font-family: Arial;
-      background: linear-gradient(135deg,#1f4037,#99f2c8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .box{
-      background: white;
-      padding: 20px;
-      width: 500px;
-      border-radius: 12px;
-      text-align: center;
-    }
-    textarea, select, button{
-      width: 100%;
-      margin: 6px 0;
-      padding: 8px;
-      font-size: 15px;
-    }
-    button{
-      background: #1f4037;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    h3{
-      min-height: 30px;
-      color: #1f4037;
-    }
+    body{font-family:Arial;background:linear-gradient(135deg,#1f4037,#99f2c8);display:flex;justify-content:center;align-items:center;height:100vh;color:white;}
+    .box{background:#2c5364;padding:20px;border-radius:12px;width:500px;text-align:center;}
+    textarea,select,button{width:100%;margin:6px 0;padding:10px;font-size:16px;border-radius:6px;}
+    button{background:#141e30;color:white;border:none;cursor:pointer;margin:4px;}
+    h3{min-height:30px;margin-top:10px;}
   </style>
 </head>
-
 <body>
 <div class="box">
-  <h2>🌍 Smart AI Translator (30+ Languages)</h2>
+  <h2>🌍 Offline Voice Translator</h2>
 
-  <textarea id="input" placeholder="Type or speak..."></textarea>
+  <textarea id="input" placeholder="Type or speak a word..."></textarea>
   <button onclick="startVoice()">🎤 Voice Input</button>
 
   <select id="fromLang">
-    <option value="auto">Auto Detect</option>
     <option value="en">English</option>
     <option value="hi">Hindi</option>
     <option value="fr">French</option>
     <option value="de">German</option>
-    <option value="es">Spanish</option>
-    <option value="it">Italian</option>
-    <option value="pt">Portuguese</option>
-    <option value="ru">Russian</option>
-    <option value="zh">Chinese</option>
-    <option value="ja">Japanese</option>
-    <option value="ko">Korean</option>
-    <option value="ar">Arabic</option>
-    <option value="ur">Urdu</option>
-    <option value="bn">Bengali</option>
-    <option value="ta">Tamil</option>
-    <option value="te">Telugu</option>
-    <option value="mr">Marathi</option>
-    <option value="gu">Gujarati</option>
-    <option value="pa">Punjabi</option>
-    <option value="ne">Nepali</option>
-    <option value="th">Thai</option>
-    <option value="vi">Vietnamese</option>
-    <option value="id">Indonesian</option>
-    <option value="tr">Turkish</option>
-    <option value="nl">Dutch</option>
-    <option value="pl">Polish</option>
-    <option value="sv">Swedish</option>
-    <option value="no">Norwegian</option>
-    <option value="da">Danish</option>
-    <option value="fi">Finnish</option>
-    <option value="el">Greek</option>
+    <option value="sa">Sanskrit</option>
   </select>
 
   <select id="toLang">
@@ -85,84 +30,84 @@
     <option value="hi">Hindi</option>
     <option value="fr">French</option>
     <option value="de">German</option>
-    <option value="es">Spanish</option>
-    <option value="it">Italian</option>
-    <option value="pt">Portuguese</option>
-    <option value="ru">Russian</option>
-    <option value="zh">Chinese</option>
-    <option value="ja">Japanese</option>
-    <option value="ko">Korean</option>
-    <option value="ar">Arabic</option>
-    <option value="ur">Urdu</option>
-    <option value="bn">Bengali</option>
-    <option value="ta">Tamil</option>
-    <option value="te">Telugu</option>
-    <option value="mr">Marathi</option>
-    <option value="gu">Gujarati</option>
-    <option value="pa">Punjabi</option>
-    <option value="ne">Nepali</option>
-    <option value="th">Thai</option>
-    <option value="vi">Vietnamese</option>
-    <option value="id">Indonesian</option>
-    <option value="tr">Turkish</option>
-    <option value="nl">Dutch</option>
-    <option value="pl">Polish</option>
-    <option value="sv">Swedish</option>
-    <option value="no">Norwegian</option>
-    <option value="da">Danish</option>
-    <option value="fi">Finnish</option>
-    <option value="el">Greek</option>
+    <option value="sa">Sanskrit</option>
   </select>
 
-  <button onclick="translate()">Translate</button>
+  <button onclick="translate()">Translate ✅</button>
   <button onclick="speak()">🔊 Voice Output</button>
 
   <h3 id="output"></h3>
 </div>
 
 <script>
-// VOICE INPUT
+// Offline dictionary (expandable)
+const dict = {
+  "hello":{"hi":"नमस्ते","fr":"bonjour","de":"hallo","sa":"नमः"},
+  "world":{"hi":"दुनिया","fr":"monde","de":"welt","sa":"जगत्"},
+  "apple":{"hi":"सेब","fr":"pomme","de":"apfel","sa":"सेबम्"},
+  "water":{"hi":"पानी","fr":"eau","de":"wasser","sa":"आपः"},
+  "book":{"hi":"किताब","fr":"livre","de":"buch","sa":"पुस्तकम्"},
+  "school":{"hi":"विद्यालय","fr":"école","de":"schule","sa":"विद्यालयः"},
+  "sun":{"hi":"सूरज","fr":"soleil","de":"sonne","sa":"सूर्यः"},
+  "moon":{"hi":"चाँद","fr":"lune","de":"mond","sa":"चन्द्रः"},
+  "fire":{"hi":"आग","fr":"feu","de":"feuer","sa":"अग्निः"},
+  "earth":{"hi":"धरती","fr":"terre","de":"erde","sa":"पृथिवी"}
+};
+
+// Voice input
 function startVoice(){
   const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  rec.lang = "en-IN";
+  rec.lang = "en-US";
   rec.start();
   rec.onresult = e => input.value = e.results[0][0].transcript;
 }
 
-// TRANSLATE USING FREE API
-async function translate(){
-  const text = document.getElementById("input").value;
+// Translate function
+function translate(){
+  const word = document.getElementById("input").value.trim().toLowerCase();
   const from = document.getElementById("fromLang").value;
   const to = document.getElementById("toLang").value;
   const output = document.getElementById("output");
 
-  if(!text){
-    output.innerText = "❌ Please enter text";
-    return;
+  if(word===""){ output.innerText="❌ Please enter a word"; return; }
+
+  // Reverse lookup for non-English source
+  let translation = "";
+  if(from==="en"){
+    translation = dict[word] ? dict[word][to] : null;
+  } else {
+    // Search dictionary for matching value in source language
+    for(let key in dict){
+      if(dict[key][from] && dict[key][from].toLowerCase() === word){
+        translation = dict[key][to];
+        break;
+      }
+    }
   }
 
-  output.innerText = "⏳ Translating...";
-
-  try{
-    const res = await fetch("https://translate.argosopentech.com/translate",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({q:text,source:from,target:to,format:"text"})
-    });
-    const data = await res.json();
-    output.innerText = data.translatedText;
-  }catch{
-    output.innerText = "❌ Internet problem";
-  }
+  output.innerText = translation ? translation : "❌ Translation not found";
 }
 
-// VOICE OUTPUT
+// Voice output
 function speak(){
   const text = document.getElementById("output").innerText;
   if(!text) return;
   const msg = new SpeechSynthesisUtterance(text);
+
+  // Language code mapping for speechSynthesis
+  const langCode = document.getElementById("toLang").value;
+  switch(langCode){
+    case "en": msg.lang="en-US"; break;
+    case "hi": msg.lang="hi-IN"; break;
+    case "fr": msg.lang="fr-FR"; break;
+    case "de": msg.lang="de-DE"; break;
+    case "sa": msg.lang="sa"; break;
+    default: msg.lang="en-US";
+  }
+
   speechSynthesis.speak(msg);
 }
 </script>
+
 </body>
 </html>
