@@ -12,7 +12,7 @@
 </head>
 <body>
 <div class="box">
-  <h2>🌍 Offline Voice Translator</h2>
+  <h2>🌍 Fully Working Offline Translator</h2>
 
   <textarea id="input" placeholder="Type or speak a word..."></textarea>
   <button onclick="startVoice()">🎤 Voice Input</button>
@@ -56,10 +56,15 @@ const dict = {
 
 // Voice input
 function startVoice(){
+  const inputField = document.getElementById("input");
+  if(!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)){
+    alert("Browser does not support voice input");
+    return;
+  }
   const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
   rec.lang = "en-US";
   rec.start();
-  rec.onresult = e => input.value = e.results[0][0].transcript;
+  rec.onresult = e => inputField.value = e.results[0][0].transcript;
 }
 
 // Translate function
@@ -71,12 +76,12 @@ function translate(){
 
   if(word===""){ output.innerText="❌ Please enter a word"; return; }
 
-  // Reverse lookup for non-English source
+  // Direct English lookup
   let translation = "";
   if(from==="en"){
     translation = dict[word] ? dict[word][to] : null;
   } else {
-    // Search dictionary for matching value in source language
+    // Reverse lookup for non-English source
     for(let key in dict){
       if(dict[key][from] && dict[key][from].toLowerCase() === word){
         translation = dict[key][to];
@@ -91,23 +96,23 @@ function translate(){
 // Voice output
 function speak(){
   const text = document.getElementById("output").innerText;
-  if(!text) return;
+  if(!text || text.startsWith("❌")) return;
+
   const msg = new SpeechSynthesisUtterance(text);
 
-  // Language code mapping for speechSynthesis
+  // Map language codes to speechSynthesis
   const langCode = document.getElementById("toLang").value;
   switch(langCode){
     case "en": msg.lang="en-US"; break;
     case "hi": msg.lang="hi-IN"; break;
     case "fr": msg.lang="fr-FR"; break;
     case "de": msg.lang="de-DE"; break;
-    case "sa": msg.lang="sa"; break;
+    case "sa": msg.lang="sa"; break; // Sanskrit
     default: msg.lang="en-US";
   }
 
   speechSynthesis.speak(msg);
 }
 </script>
-
 </body>
 </html>
